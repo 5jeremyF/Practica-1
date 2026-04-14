@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yoselyn Store 🌸</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --rose: #D4537E;
+      --rose-light: #FBEAF0;
+      --rose-dark: #4B1528;
+      --cream: #FAF8F5;
+      --ink: #1a1a1a;
+      --muted: #888;
+      --border: rgba(0,0,0,0.08);
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; }
+
+    /* NAVBAR */
+    .nav {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--rose); letter-spacing: -0.5px; }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a {
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+    .cart-btn {
+      background: var(--rose);
+      color: #fff;
+      border: none;
+      padding: 9px 22px;
+      border-radius: 30px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background .2s;
+    }
+    .cart-btn:hover { background: #993556; }
+    .cart-count {
+      background: #fff;
+      color: var(--rose);
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, #fbeaf0 0%, #f5e6f5 100%);
+      padding: 3.5rem 2rem 2.5rem;
+      text-align: center;
+    }
+    .hero h2 { font-family: 'Playfair Display', serif; font-size: 42px; color: var(--ink); margin-bottom: .5rem; }
+    .hero p { color: var(--muted); font-size: 16px; }
+
+    /* LAYOUT */
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 2rem;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      align-items: start;
+    }
+    @media (max-width: 768px) {
+      .layout { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+
+    .section-title { font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 1.5rem; color: var(--ink); }
+
+    /* PRODUCTOS */
+    .productos { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.25rem; }
+    .producto {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: transform .2s, box-shadow .2s;
+      cursor: default;
+    }
+    .producto:hover { transform: translateY(-5px); box-shadow: 0 14px 36px rgba(212,83,126,.14); }
+    .producto-img {
+      width: 100%;
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, #fbeaf0, #f5e6f5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 56px;
+    }
+    .producto-body { padding: 1rem; }
+    .producto-name { font-weight: 500; font-size: 15px; margin-bottom: 4px; }
+    .producto-desc { font-size: 12px; color: var(--muted); margin-bottom: .75rem; line-height: 1.5; }
+    .producto-footer { display: flex; align-items: center; justify-content: space-between; }
+    .precio { font-weight: 700; font-size: 18px; color: var(--rose); }
+    .add-btn {
+      background: var(--rose-light);
+      color: var(--rose);
+      border: none;
+      padding: 7px 15px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .add-btn:hover { background: var(--rose); color: #fff; }
+    .add-btn.added { background: var(--rose); color: #fff; }
+
+    /* CARRITO */
+    .carrito {
+      background: #fff;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      position: sticky;
+      top: 80px;
+    }
+    .carrito h2 { font-family: 'Playfair Display', serif; font-size: 20px; margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+    .carrito-items { min-height: 80px; margin-bottom: 1rem; }
+    .carrito-empty { color: var(--muted); font-size: 13px; text-align: center; padding: 1.5rem 0; }
+    .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+    .cart-item-name { font-weight: 500; flex: 1; }
+    .cart-item-price { color: var(--rose); font-weight: 600; margin-right: 10px; }
+    .remove-btn { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; line-height: 1; padding: 0 4px; transition: color .2s; }
+    .remove-btn:hover { color: #E24B4A; }
+    .cart-total { display: flex; justify-content: space-between; font-size: 15px; font-weight: 600; padding: 1rem 0; margin-top: .5rem; }
+    .cart-total span:last-child { color: var(--rose); font-size: 18px; }
+    .checkout-btn {
+      width: 100%;
+      background: var(--rose);
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 30px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background .2s;
+      letter-spacing: .3px;
+    }
+    .checkout-btn:hover { background: #993556; }
+    .checkout-btn:disabled { background: #ddd; color: #aaa; cursor: not-allowed; }
+
+    /* CHECKOUT */
+    .checkout-wrap { padding: 0 2rem 3rem; max-width: 1200px; margin: 0 auto; }
+    .checkout-section {
+      background: #fff;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      padding: 2rem;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .checkout-section h2 { font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 1.5rem; text-align: center; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: 12px; font-weight: 500; color: var(--muted); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 6px; }
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: border .2s;
+      background: #fafafa;
+      color: var(--ink);
+    }
+    .form-group input:focus { border-color: var(--rose); background: #fff; }
+    .fila { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .badge-secure { display: flex; align-items: center; justify-content: center; gap: 6px; color: var(--muted); font-size: 12px; margin-top: 1rem; }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--ink);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 500;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all .3s;
+      z-index: 9999;
+      pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 13px;
+      border-top: 1px solid var(--border);
+      margin-top: 2rem;
+    }
+    footer strong { color: var(--rose); }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="nav">
+  <div class="logo">🌸 Yoselyn Store</div>
+  <nav class="nav-links">
+    <a href="#">Inicio</a>
+    <a href="#">Productos</a>
+    <a href="#">Ofertas</a>
+  </nav>
+  <button class="cart-btn" onclick="scrollToCart()">
+    🛒 Carrito
+    <span class="cart-count" id="cartCount">0</span>
+  </button>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <h2>Colección exclusiva</h2>
+  <p>Productos seleccionados para ti con amor ✨</p>
+</div>
+
+<!-- LAYOUT PRINCIPAL -->
+<div class="layout">
+  <!-- PRODUCTOS -->
+  <div>
+    <h3 class="section-title">Nuestros productos</h3>
+    <div class="productos" id="productosGrid"></div>
+  </div>
+
+  <!-- CARRITO -->
+  <aside class="carrito" id="carritoPanel">
+    <h2>Tu carrito</h2>
+    <div class="carrito-items" id="carritoItems">
+      <p class="carrito-empty">Tu carrito está vacío 🛍️</p>
+    </div>
+    <div class="cart-total" id="cartTotalWrap" style="display:none">
+      <span>Total</span>
+      <span id="cartTotal">$0</span>
+    </div>
+    <button class="checkout-btn" id="checkoutBtn" disabled onclick="scrollToCheckout()">
+      Finalizar compra →
+    </button>
+  </aside>
+</div>
+
+<!-- CHECKOUT -->
+<div class="checkout-wrap">
+  <div class="checkout-section" id="checkoutSection">
+    <h2>Pago seguro</h2>
+    <div class="form-group">
+      <label>Nombre completo</label>
+      <input type="text" id="nombre" placeholder="María García">
+    </div>
+    <div class="form-group">
+      <label>Número de tarjeta</label>
+      <input type="text" id="cardNum" placeholder="1234 5678 9012 3456" maxlength="19">
+    </div>
+    <div class="fila">
+      <div class="form-group">
+        <label>Vencimiento</label>
+        <input type="text" id="cardExp" placeholder="MM/AA" maxlength="5">
+      </div>
+      <div class="form-group">
+        <label>CVV</label>
+        <input type="text" id="cardCvv" placeholder="123" maxlength="3">
+      </div>
+    </div>
+    <button class="checkout-btn" onclick="pay()">Pagar ahora</button>
+    <div class="badge-secure">Transacción cifrada y segura</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  Hecho por <strong>Yoselyn Store</strong> — Todos los derechos reservados © 2025
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  const products = [
+    { id: 1, name: 'Crema Hidratante',     desc: 'Fórmula suave para piel sensible',        price: 10, emoji: '🧴' },
+    { id: 2, name: 'Labial Rose',          desc: 'Color duradero todo el día',               price: 15, emoji: '💄' },
+    { id: 3, name: 'Serum Luminoso',       desc: 'Vitamina C concentrada',                   price: 20, emoji: '✨' },
+    { id: 4, name: 'Mascarilla Nocturna',  desc: 'Renueva tu piel mientras duermes',         price: 18, emoji: '🌙' },
+    { id: 5, name: 'Perfume Floral',       desc: 'Notas de jazmín y rosa',                   price: 35, emoji: '🌸' },
+    { id: 6, name: 'Esmalte Coral',        desc: 'Brillo intenso larga duración',            price: 8,  emoji: '💅' },
+  ];
+
+  let cart = {};
+
+  function renderProducts() {
+    const g = document.getElementById('productosGrid');
+    g.innerHTML = products.map(p => `
+      <div class="producto">
+        <div class="producto-img">${p.emoji}</div>
+        <div class="producto-body">
+          <div class="producto-name">${p.name}</div>
+          <div class="producto-desc">${p.desc}</div>
+          <div class="producto-footer">
+            <span class="precio">$${p.price}</span>
+            <button class="add-btn" id="btn${p.id}" onclick="addToCart(${p.id})">+ Agregar</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function addToCart(id) {
+    const p = products.find(x => x.id === id);
+    cart[id] = (cart[id] || 0) + 1;
+    renderCart();
+    showToast(`${p.emoji} ${p.name} agregado al carrito`);
+    const btn = document.getElementById('btn' + id);
+    btn.textContent = '✓ Agregado';
+    btn.classList.add('added');
+    setTimeout(() => { btn.textContent = '+ Agregar'; btn.classList.remove('added'); }, 1500);
+  }
+
+  function removeFromCart(id) {
+    delete cart[id];
+    renderCart();
+    showToast('Producto eliminado');
+  }
+
+  function renderCart() {
+    const items = Object.entries(cart);
+    const wrap = document.getElementById('carritoItems');
+    const totalWrap = document.getElementById('cartTotalWrap');
+    const btn = document.getElementById('checkoutBtn');
+    const countEl = document.getElementById('cartCount');
+    let total = 0, count = 0;
+
+    if (items.length === 0) {
+      wrap.innerHTML = '<p class="carrito-empty">Tu carrito está vacío 🛍️</p>';
+      totalWrap.style.display = 'none';
+      btn.disabled = true;
+      countEl.textContent = '0';
+      return;
+    }
+
+    wrap.innerHTML = items.map(([id, qty]) => {
+      const p = products.find(x => x.id == id);
+      total += p.price * qty;
+      count += qty;
+      return `
+        <div class="cart-item">
+          <span class="cart-item-name">${p.emoji} ${p.name}${qty > 1 ? ` ×${qty}` : ''}</span>
+          <span class="cart-item-price">$${p.price * qty}</span>
+          <button class="remove-btn" onclick="removeFromCart(${id})">✕</button>
+        </div>`;
+    }).join('');
+
+    totalWrap.style.display = 'flex';
+    document.getElementById('cartTotal').textContent = '$' + total;
+    btn.disabled = false;
+    countEl.textContent = count;
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  function scrollToCart() {
+    document.getElementById('carritoPanel').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function scrollToCheckout() {
+    document.getElementById('checkoutSection').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // Formato automático tarjeta
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('cardNum').addEventListener('input', function () {
+      this.value = this.value.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim().substring(0, 19);
+    });
+    document.getElementById('cardExp').addEventListener('input', function () {
+      this.value = this.value.replace(/\D/g, '').replace(/^(\d{2})(\d)/, '$1/$2').substring(0, 5);
+    });
+    document.getElementById('cardCvv').addEventListener('input', function () {
+      this.value = this.value.replace(/\D/g, '');
+    });
+  });
+
+  function pay() {
+    const nombre = document.getElementById('nombre').value.trim();
+    const card = document.getElementById('cardNum').value.trim();
+    const exp = document.getElementById('cardExp').value.trim();
+    const cvv = document.getElementById('cardCvv').value.trim();
+
+    if (!nombre) { showToast('Ingresa tu nombre completo'); return; }
+    if (card.length < 19) { showToast('Número de tarjeta inválido'); return; }
+    if (exp.length < 5) { showToast('Fecha de vencimiento inválida'); return; }
+    if (cvv.length < 3) { showToast('CVV inválido'); return; }
+    if (Object.keys(cart).length === 0) { showToast('Tu carrito está vacío'); return; }
+
+    showToast('Pago procesado con éxito! Gracias por tu compra');
+    setTimeout(() => { cart = {}; renderCart(); }, 2000);
+  }
+
+  renderProducts();
+</script>
+</body>
+</html>
